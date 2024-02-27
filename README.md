@@ -53,3 +53,58 @@ All information gets from the database(example: your watches/phone collect infor
       * Exercise: Current plan and some predefined plans
       * Me: User page with it's information in it from previos points + settings
   
+## Data Models
+All models extends basic class entity that contain field Id.
+### User Model
+
+- **Attributes:**
+  ```java
+    public/ Name of user. Should not be exclusive
+    public String mail; // Mail of user. should be exclusive(only one for user)
+    public String hashPassword; // Password of user that hashed. When user input his password, it should be hashed and compared
+    public List<Achievement> achieve String name; /ments; // User achivements, that it already collect. At first enter it is empty
+    public List<Plan> plans; // User plans, that it already create or get. At first enter it is empty. Then user can create new Plan or acquire.
+    public List<StepData> stepData; // User data that is only collected from application database.
+    public List<SleepData> sleepData; // User data that is only collected from application database.
+    public List<HeartRateData> heartRateData; // User data that is only collected from application database.
+  ```
+   ### Data Model:
+Abstract class for all data that user have. All different data extends this basic class. It points to the user and check when data was measured.
+- **Attributes:**
+  ```java
+    protected Integer userId;
+    protected LocalDateTime dateMeasured = LocalDateTime.MIN;
+    protected LocalTime timeDuration = LocalTime.of(0,0);
+    protected Integer value = 0;
+  ```
+
+### Achievements:
+This achievement model consist of tasks that should be completed to complete achievement. User has list of all it's achievements.
+- **Attributes:**
+  ```java
+    public String name = "";
+    public List<Task> tasksToAchieve;
+    public String description = "";
+    public AchievementType achievementType = AchievementType.BASIC;
+    public LocalDateTime timeTaken = LocalDateTime.MIN;
+  ```
+  ### Plan:
+Plan model include tasks(exercises) that should contain.
+- **Attributes:**
+  ```java
+    public String name = "";
+    // number from 0 to 100 in percents
+    public Double planCompletion = 0.0;
+    public List<Task> tasksToComplete;
+    public LocalDateTime timeEnded = LocalDateTime.MIN;
+  ```
+  ### Meals:
+You can add meals that you taken during the day. Including calories, nutrients, name and mealtype: breakfast, lunch, dinner, morning snack, afternoon snack, evening snack.
+- **Attributes:**
+  ```java
+    public String name;
+    public HashMap<String, Integer> nutrients;
+    public String calories;
+    public MealType mealType = MealType.DEFAULT;
+    public LocalDateTime timeTaken = LocalDateTime.MIN;
+  ```
