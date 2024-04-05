@@ -742,7 +742,7 @@ class CliDashboardPage {
                     name: "Breads",
                     nutrients: {}));
             var map = meal.toMap();
-            stdout.writeln("Added meal: ${map['name'] - map['mealType']}");
+            stdout.writeln("Added meal: ${map['name']} - ${map['mealType']}");
           case ("2"):
             var mealList = await scheduleService.getAll(user.id);
             if (mealList.isEmpty) {
@@ -751,7 +751,7 @@ class CliDashboardPage {
             }
             for (var meal in mealList) {
               var map = meal.toMap();
-              stdout.writeln("Meal: $map");
+              stdout.writeln("Meal: ${map['name']} - ${map['mealType']}");
             }
           case ("3"):
             var dailyCalories =

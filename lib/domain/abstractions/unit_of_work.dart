@@ -1,5 +1,5 @@
 import 'package:fitness_sync/domain/abstractions/repository.dart';
-import 'package:fitness_sync/domain/entities/data/achievement.dart';
+import 'package:fitness_sync/domain/entities/tasks/achievement.dart';
 import 'package:fitness_sync/domain/entities/data/heart_rate.dart';
 import 'package:fitness_sync/domain/entities/data/notification.dart';
 import 'package:fitness_sync/domain/entities/data/sleep_data.dart';

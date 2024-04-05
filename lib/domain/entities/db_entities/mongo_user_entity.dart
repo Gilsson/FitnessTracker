@@ -1,4 +1,4 @@
-import 'package:fitness_sync/domain/entities/data/achievement.dart';
+import 'package:fitness_sync/domain/entities/tasks/achievement.dart';
 import 'package:fitness_sync/domain/entities/data/heart_rate.dart';
 import 'package:fitness_sync/domain/entities/data/sleep_data.dart';
 import 'package:fitness_sync/domain/entities/data/step_data.dart';
