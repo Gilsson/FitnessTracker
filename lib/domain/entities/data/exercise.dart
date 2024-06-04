@@ -1,6 +1,8 @@
+import 'package:fitness_sync/domain/entities/data/data.dart';
 import 'package:fitness_sync/domain/entities/data/timed_data.dart';
+import 'package:fitness_sync/domain/entities/entity.dart';
 
-class Exercise extends TimedData {
+class Exercise extends Entity {
   String name;
   String description = "";
   ExerciseCategory category;
@@ -10,8 +12,7 @@ class Exercise extends TimedData {
   int sets;
   int reps;
   int calories;
-  bool completed = false;
-  DateTime timeCompleted = DateTime.utc(0);
+  Duration duration = Duration(seconds: 0);
 
   Exercise({
     required this.name,
@@ -21,24 +22,22 @@ class Exercise extends TimedData {
     required this.sets,
     required this.reps,
     required this.calories,
-    required super.date,
-    required super.duration,
+    required this.duration,
+    this.guide = const [],
   });
-
-  @override
-  Map<String, dynamic> toMap() {
-    return {
-      "name": name,
-      "description": description,
-      "category": category.customName,
-      "equipment": equipment.customName,
-      "difficulty": difficulty.customName,
-      "guide": guide,
-      "sets": sets,
-      "reps": reps,
-      "calories": calories
-    };
-  }
+  Exercise.full({
+    required this.name,
+    required this.category,
+    required this.equipment,
+    required this.difficulty,
+    required this.sets,
+    required this.reps,
+    required this.calories,
+    required this.description,
+    required this.guide,
+    required this.duration,
+    required String id,
+  }) : super.withId(id);
 }
 
 enum ExerciseCategory { cardivascular, strength, flexibility, none }
@@ -54,6 +53,19 @@ extension ExerciseCategoryExtension on ExerciseCategory {
         return "Flexibility";
       case ExerciseCategory.none:
         return "None";
+    }
+  }
+
+  static ExerciseCategory fromValue(int value) {
+    switch (value) {
+      case 0:
+        return ExerciseCategory.cardivascular;
+      case 1:
+        return ExerciseCategory.strength;
+      case 2:
+        return ExerciseCategory.flexibility;
+      default:
+        return ExerciseCategory.none;
     }
   }
 }
@@ -94,6 +106,33 @@ extension EquipmentTypeExtension on EquipmentType {
         return "Bodyweight";
       case EquipmentType.custom:
         return "Custom";
+    }
+  }
+
+  static EquipmentType fromValue(int value) {
+    switch (value) {
+      case 0:
+        return EquipmentType.none;
+      case 1:
+        return EquipmentType.treadmill;
+      case 2:
+        return EquipmentType.barbell;
+      case 3:
+        return EquipmentType.elliptical;
+      case 4:
+        return EquipmentType.bike;
+      case 5:
+        return EquipmentType.pullupBar;
+      case 6:
+        return EquipmentType.dumbbell;
+      case 7:
+        return EquipmentType.kettlebell;
+      case 8:
+        return EquipmentType.bodyweight;
+      case 9:
+        return EquipmentType.custom;
+      default:
+        return EquipmentType.none;
     }
   }
 }
@@ -139,4 +178,18 @@ extension DifficultyTypeExtension on DifficultyType {
         return DifficultyType.none;
     }
   }
+}
+
+class UserExercise extends Data {
+  String exerciseId;
+  bool completed = false;
+  DateTime date;
+  UserExercise({required this.date, required this.exerciseId});
+  UserExercise.full(
+      {required String id,
+      required String userId,
+      required this.date,
+      required this.exerciseId,
+      required this.completed})
+      : super.withId(userId: userId, id: id);
 }

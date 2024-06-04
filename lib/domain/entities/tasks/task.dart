@@ -8,13 +8,12 @@ class Task extends Entity {
   DateTime timeCompleted = DateTime.utc(0);
 
   Task();
-  Map<String, dynamic> toMap() {
-    return {
-      "name": name,
-      "value": value,
-      "dateTaken": dateTaken,
-      "currentProgress": currentProgress,
-      "timeCompleted": timeCompleted,
-    };
-  }
+  Task.full(
+      {required id,
+      required this.name,
+      required this.value,
+      required this.dateTaken,
+      required this.currentProgress,
+      required this.timeCompleted})
+      : super.withId(id);
 }

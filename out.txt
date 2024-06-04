@@ -1,0 +1,285 @@
+classDiagram
+
+class CaloriesTarget
+CaloriesTarget : +calories int
+CaloriesTarget : +date DateTime
+Data <|-- CaloriesTarget
+
+class Data
+Data : +userId String
+Data : +toMap() Map<String, dynamic>
+Entity <|-- Data
+
+class DataType
+<<enumeration>> DataType
+DataType : +index int
+DataType : +values$ List~DataType~
+DataType : +sleep$ DataType
+DataType o-- DataType
+DataType : +heartRate$ DataType
+DataType o-- DataType
+DataType : +steps$ DataType
+DataType o-- DataType
+DataType : +weight$ DataType
+DataType o-- DataType
+DataType : +height$ DataType
+DataType o-- DataType
+DataType : +age$ DataType
+DataType o-- DataType
+DataType : +sex$ DataType
+DataType o-- DataType
+DataType : +none$ DataType
+DataType o-- DataType
+Enum <|.. DataType
+
+class Exercise
+Exercise : +name String
+Exercise : +description String
+Exercise : +category ExerciseCategory
+Exercise o-- ExerciseCategory
+Exercise : +equipment EquipmentType
+Exercise o-- EquipmentType
+Exercise : +difficulty DifficultyType
+Exercise o-- DifficultyType
+Exercise : +guide List~String~
+Exercise : +sets int
+Exercise : +reps int
+Exercise : +calories int
+Exercise : +duration Duration
+Entity <|-- Exercise
+
+class UserExercise
+UserExercise : +exerciseId String
+UserExercise : +completed bool
+UserExercise : +date DateTime
+Data <|-- UserExercise
+
+class ExerciseCategory
+<<enumeration>> ExerciseCategory
+ExerciseCategory : +index int
+ExerciseCategory : +values$ List~ExerciseCategory~
+ExerciseCategory : +cardivascular$ ExerciseCategory
+ExerciseCategory o-- ExerciseCategory
+ExerciseCategory : +strength$ ExerciseCategory
+ExerciseCategory o-- ExerciseCategory
+ExerciseCategory : +flexibility$ ExerciseCategory
+ExerciseCategory o-- ExerciseCategory
+ExerciseCategory : +none$ ExerciseCategory
+ExerciseCategory o-- ExerciseCategory
+Enum <|.. ExerciseCategory
+
+class EquipmentType
+<<enumeration>> EquipmentType
+EquipmentType : +index int
+EquipmentType : +values$ List~EquipmentType~
+EquipmentType : +none$ EquipmentType 
+EquipmentType : +treadmill$ EquipmentType 
+EquipmentType : +barbell$ EquipmentType 
+EquipmentType : +elliptical$ EquipmentType 
+EquipmentType : +bike$ EquipmentType 
+EquipmentType : +pullupBar$ EquipmentType 
+EquipmentType : +dumbbell$ EquipmentType 
+EquipmentType : +kettlebell$ EquipmentType 
+EquipmentType : +bodyweight$ EquipmentType 
+EquipmentType : +custom$ EquipmentType 
+
+class DifficultyType
+<<enumeration>> DifficultyType
+DifficultyType : +index int
+DifficultyType : +values$ List~DifficultyType~
+DifficultyType : +easy$ DifficultyType 
+DifficultyType : +medium$ DifficultyType 
+DifficultyType : +hard$ DifficultyType 
+DifficultyType : +none$ DifficultyType
+
+class HeartRateData
+HeartRateData : +rate int
+HeartRateData : +toMap() Map<String, dynamic>
+TimedData <|-- HeartRateData
+
+class Notification
+Notification : +description String
+Notification : +isViewed bool
+Notification : +name String
+Notification : +timeCreated DateTime
+Data <|-- Notification
+
+class Reminder
+Reminder : +interval Duration
+Reminder : +nextReminderTime DateTime
+Reminder : +calculateNextReminderTime() void
+Notification <|-- Reminder
+
+class SleepData
+SleepData : +sleepStage SleepStage
+SleepData o-- SleepStage
+SleepData : +toMap() Map<String, dynamic>
+TimedData <|-- SleepData
+
+class SleepStage
+<<enumeration>> SleepStage
+SleepStage : +index int
+SleepStage : +values$ List~SleepStage~
+SleepStage : +awake$ SleepStage 
+SleepStage : +light$ SleepStage 
+SleepStage : +deep$ SleepStage 
+SleepStage : +rem$ SleepStage 
+SleepStage : +planned$ SleepStage 
+SleepStage : +none$ SleepStage 
+
+class Statistics
+Statistics : +type StatisticsType
+Statistics o-- StatisticsType
+Statistics : +value double
+Statistics : +time DateTime?
+Data <|-- Statistics
+
+class StatisticsType
+<<enumeration>> StatisticsType
+StatisticsType : +index int
+StatisticsType : +values$ List~StatisticsType~
+StatisticsType : +height$ StatisticsType
+StatisticsType : +weight$ StatisticsType
+StatisticsType : +age$ StatisticsType
+StatisticsType : +sex$ StatisticsType
+StatisticsType : +none$ StatisticsType
+
+class StepData
+StepData : +steps int
+StepData : +toMap() Map<String, dynamic>
+TimedData <|-- StepData
+
+class TimedData
+TimedData : -_date DateTime
+TimedData : -_duration Duration
+TimedData : +isScheduled bool
+TimedData : +date DateTime
+TimedData : +duration Duration
+TimedData : +toMap() Map<String, dynamic>
+Data <|-- TimedData
+
+class Workout
+Workout : +exercises List~Exercise~
+Workout : +name String
+Workout : +description String
+Workout : +difficulty DifficultyType
+Workout o-- DifficultyType
+Workout : -_duration Duration
+Workout : +duration Duration
+Workout : +addExercise() Exercise
+Workout : +getCalories() int
+Workout : +removeExercise() Exercise
+Entity <|-- Workout
+
+class UserWorkout
+UserWorkout : +workoutId String
+UserWorkout : +completed bool
+UserWorkout : +isScheduled bool
+UserWorkout : +date DateTime
+Data <|-- UserWorkout
+
+class MockUserEntity
+MockUserEntity : +name String
+MockUserEntity : +mail String
+MockUserEntity : +password String
+MockUserEntity : +achievements List~Achievement~
+MockUserEntity : +stepData List~StepData~
+MockUserEntity : +sleepData List~SleepData~
+MockUserEntity : +heartRateData List~HeartRateData~
+Entity <|-- MockUserEntity
+
+
+class Entity
+<<abstract>> Entity
+Entity : +id String
+Entity : +toMap() Map<String, dynamic>
+
+class Meals
+Meals : +name String
+Meals : +nutrients Map~Nutrients, int~
+Meals : +calories int
+Meals : +description String
+Meals : +ingredients Map~String, String~
+Meals : +cookList List~String~
+Meals : +mealType MealType
+Meals o-- MealType
+Meals : +icon String
+Entity <|-- Meals
+
+class UserMeals
+UserMeals : +meal Meals
+UserMeals o-- Meals
+UserMeals : +completed bool
+UserMeals : +isScheduled bool
+UserMeals : +date DateTime
+Data <|-- UserMeals
+
+class Nutrients
+<<enumeration>> Nutrients
+Nutrients : +index int
+Nutrients : +values$ List~Nutrients~
+Nutrients : +carbohydrates$ Nutrients
+ 
+Nutrients : +proteins$ Nutrients
+Nutrients : +fats$ Nutrients
+Nutrients : +vitamins$ Nutrients
+Nutrients : +minerals$ Nutrients
+Nutrients : +fibre$ Nutrients
+Nutrients : +water$ Nutrients
+
+class MealType
+<<enumeration>> MealType
+MealType : +index int
+MealType : +values$ List~MealType~
+MealType : +breakfast$ MealType
+MealType o-- MealType
+MealType : +lunch$ MealType
+MealType : +dinner$ MealType
+MealType : +snacks$ MealType
+MealType : +none$ MealType
+
+class Achievement
+Achievement : +name String
+Achievement : +tasksToAchieve List~Task~
+Achievement : +description String
+Achievement : +achievementType AchievementType
+Achievement o-- AchievementType
+Achievement : +timeTaken DateTime
+Achievement : +completed bool
+Data <|-- Achievement
+
+class AchievementType
+<<enumeration>> AchievementType
+AchievementType : +index int
+AchievementType : +values$ List~AchievementType~
+AchievementType : +cumulative$ AchievementType
+AchievementType : +walking$ AchievementType
+AchievementType : +running$ AchievementType
+AchievementType : +sleeping$ AchievementType
+AchievementType : +basic$ AchievementType
+
+class Task
+Task : +name String
+Task : +value String
+Task : +dateTaken DateTime
+Task : +currentProgress String
+Task : +timeCompleted DateTime
+Entity <|-- Task
+
+class UserDomain
+UserDomain : +name String
+UserDomain : +mail String
+UserDomain : +hashPassword String
+UserDomain : +achievements List~Achievement~
+UserDomain : +stepData List~StepData~
+UserDomain : +sleepData List~SleepData~
+UserDomain : +heartRateData List~HeartRateData~
+UserDomain : +userData List~TimedData~
+UserDomain : +statistics List~Statistics~
+Entity <|-- UserDomain
+
+class Water
+Water : +amount int
+Water : +dateTaken DateTime
+Water : +isScheduled bool
+Data <|-- Water

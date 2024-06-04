@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:fitness_sync/application/activity_tracker/activity_tracker_service.dart';
 import 'package:fitness_sync/application/meal_planner/meal_schedule_service.dart';
+import 'package:fitness_sync/application/meal_planner/user_meals_schedule.dart';
 import 'package:fitness_sync/application/notifications/notifications_service.dart';
 import 'package:fitness_sync/application/sleep_planner/sleep_planner_service.dart';
 import 'package:fitness_sync/application/user/user_statistics_service.dart';
@@ -23,7 +24,8 @@ class CliDashboardPage {
   late UserStatisticsService statService;
   late ActivityTrackerService activityService;
   late SleepPlannerService sleepService;
-  late MealScheduleService scheduleService;
+  late UserMealsScheduleService userMealScheduleService;
+  late MealScheduleService mealScheduleService;
   late WorkoutService workoutService;
   late NotificationService notificationService;
   UserDomain user;
@@ -32,9 +34,10 @@ class CliDashboardPage {
     statService = UserStatisticsService(unitOfWork: unitOfWork);
     activityService = ActivityTrackerService(unitOfWork: unitOfWork);
     sleepService = SleepPlannerService(unitOfWork: unitOfWork);
-    scheduleService = MealScheduleService(unitOfWork: unitOfWork);
+    userMealScheduleService = UserMealsScheduleService(unitOfWork: unitOfWork);
     workoutService = WorkoutService(unitOfWork: unitOfWork);
     notificationService = NotificationService(unitOfWork: unitOfWork);
+    mealScheduleService = MealScheduleService(unitOfWork: unitOfWork);
   }
 
   Future<void> bodyMassIndexView() async {
@@ -223,11 +226,12 @@ class CliDashboardPage {
         switch (choose) {
           case ("1"):
             var steps = await activityService.addSteps(
-                user.id,
-                StepData(
-                    steps: Random().nextInt(100),
-                    date: DateTime.now(),
-                    duration: Duration(seconds: Random().nextInt(30))));
+              user.id,
+              StepData(
+                  steps: Random().nextInt(100),
+                  date: DateTime.now(),
+                  duration: Duration(seconds: Random().nextInt(30))),
+            );
             var map = steps.toMap();
             stdout.writeln("Added steps: $map");
           case ("2"):
@@ -300,8 +304,11 @@ class CliDashboardPage {
     clearConsole();
     var avocadoToast = Meals.empty();
     avocadoToast.name = "Avocado Toast";
-    avocadoToast.userId = 123; // assuming the user ID
-    avocadoToast.nutrients = {"fat": 10, "fiber": 5, "protein": 3};
+    avocadoToast.nutrients = {
+      Nutrients.fats: 10,
+      Nutrients.fibre: 5,
+      Nutrients.proteins: 3
+    };
     avocadoToast.calories = 250;
     avocadoToast.description = "Healthy and delicious breakfast option";
     avocadoToast.ingredients = {"avocado": "1", "bread slices": "2"};
@@ -314,11 +321,8 @@ class CliDashboardPage {
 
     var greekYogurtFruit = Meals.empty();
     greekYogurtFruit.name = "Greek Yogurt with Fruit";
-    greekYogurtFruit.userId = 123; // assuming the user ID
     greekYogurtFruit.nutrients = {
-      "protein": 15,
-      "calcium": 20,
-      "vitamin C": 10
+      Nutrients.proteins: 15,
     };
     greekYogurtFruit.calories = 200;
     greekYogurtFruit.description = "Nutritious and refreshing breakfast option";
@@ -337,12 +341,9 @@ class CliDashboardPage {
     // Creating Meal objects for lunch
     var grilledChickenSalad = Meals.empty();
     grilledChickenSalad.name = "Grilled Chicken Salad";
-    grilledChickenSalad.userId = 123; // assuming the user ID
     grilledChickenSalad.nutrients = {
-      "protein": 30,
-      "fiber": 10,
-      "vitamin A": 25,
-      "vitamin C": 30
+      Nutrients.proteins: 30,
+      Nutrients.fibre: 10,
     };
     grilledChickenSalad.calories = 350;
     grilledChickenSalad.description = "Healthy and satisfying lunch option";
@@ -363,8 +364,7 @@ class CliDashboardPage {
 
     var quinoaVeggieBowl = Meals.empty();
     quinoaVeggieBowl.name = "Quinoa Veggie Bowl";
-    quinoaVeggieBowl.userId = 123; // assuming the user ID
-    quinoaVeggieBowl.nutrients = {"protein": 15, "fiber": 8, "iron": 10};
+    quinoaVeggieBowl.nutrients = {Nutrients.proteins: 15, Nutrients.fibre: 8};
     quinoaVeggieBowl.calories = 300;
     quinoaVeggieBowl.description = "Nutritious and filling vegetarian meal";
     quinoaVeggieBowl.ingredients = {
@@ -388,17 +388,11 @@ class CliDashboardPage {
 
     // Creating Meal objects for dinner
     var spaghettiBolognese = Meals(
-        mealType: MealType.dinner,
-        name: "Spaghetti Bolognese",
-        calories: 400,
-        nutrients: {
-          "protein": 20,
-          "fiber": 8,
-          "vitamin A": 15,
-          "vitamin C": 20
-        },
-        timeTaken: DateTime.now());
-    spaghettiBolognese.userId = 123;
+      mealType: MealType.dinner,
+      name: "Spaghetti Bolognese",
+      calories: 400,
+      nutrients: {Nutrients.proteins: 20, Nutrients.fibre: 8},
+    );
     spaghettiBolognese.description = "Classic Italian pasta dish";
     spaghettiBolognese.ingredients = {
       "Spaghetti": "200g",
@@ -417,12 +411,11 @@ class CliDashboardPage {
     ];
 
     var teriyakiSalmonRice = Meals(
-        mealType: MealType.dinner,
-        name: "Teriyaki Salmon with Rice",
-        nutrients: {"protein": 25, "omega-3": 100, "fiber": 5, "iron": 8},
-        calories: 450,
-        timeTaken: DateTime.now());
-    teriyakiSalmonRice.userId = 123;
+      mealType: MealType.dinner,
+      name: "Teriyaki Salmon with Rice",
+      nutrients: {Nutrients.proteins: 25, Nutrients.fibre: 5},
+      calories: 450,
+    );
     teriyakiSalmonRice.description = "Flavorful and nutritious seafood dish";
     teriyakiSalmonRice.ingredients = {
       "Salmon fillet": "1",
@@ -441,12 +434,11 @@ class CliDashboardPage {
 
     // Creating Meal objects for snacks
     var greekYogurtParfait = Meals(
-        name: "Greek Yogurt Parfait",
-        nutrients: {"protein": 10, "fiber": 5, "calcium": 15},
-        calories: 150,
-        mealType: MealType.snacks,
-        timeTaken: DateTime.now());
-    greekYogurtParfait.userId = 123;
+      name: "Greek Yogurt Parfait",
+      nutrients: {Nutrients.proteins: 10, Nutrients.fibre: 5},
+      calories: 150,
+      mealType: MealType.snacks,
+    );
     greekYogurtParfait.description = "Refreshing and satisfying snack option";
     greekYogurtParfait.ingredients = {
       "Greek yogurt": "1/2 cup",
@@ -464,10 +456,8 @@ class CliDashboardPage {
     var hummusVeggieSticks = Meals(
         name: "Hummus with Veggie Sticks",
         mealType: MealType.snacks,
-        timeTaken: DateTime.now(),
-        nutrients: {"protein": 5, "fiber": 3, "vitamin A": 10, "vitamin C": 8},
+        nutrients: {Nutrients.proteins: 5, Nutrients.fibre: 3},
         calories: 100);
-    hummusVeggieSticks.userId = 123;
     hummusVeggieSticks.description = "Healthy and satisfying snack option";
     hummusVeggieSticks.ingredients = {
       "Hummus": "1/2 cup",
@@ -513,12 +503,22 @@ class CliDashboardPage {
         if (choose != null) {
           switch (choose) {
             case '1':
-              await scheduleService.addMealToSchedule(
-                  user.id, teriyakiSalmonRice);
+              await userMealScheduleService.addMealToSchedule(
+                  user.id,
+                  UserMeals.part(
+                      meal: teriyakiSalmonRice,
+                      date: DateTime.now(),
+                      isScheduled: true,
+                      completed: false));
               break;
             case '2':
-              await scheduleService.addMealToSchedule(
-                  user.id, greekYogurtParfait);
+              await userMealScheduleService.addMealToSchedule(
+                  user.id,
+                  UserMeals.part(
+                      meal: greekYogurtParfait,
+                      date: DateTime.now(),
+                      isScheduled: true,
+                      completed: false));
               break;
             default:
               stdout.writeln(
@@ -564,12 +564,22 @@ class CliDashboardPage {
         if (choose != null) {
           switch (choose) {
             case '1':
-              await scheduleService.addMealToSchedule(
-                  user.id, grilledChickenSalad);
+              await userMealScheduleService.addMealToSchedule(
+                  user.id,
+                  UserMeals.part(
+                      meal: grilledChickenSalad,
+                      date: DateTime.now(),
+                      isScheduled: true,
+                      completed: false));
               break;
             case '2':
-              await scheduleService.addMealToSchedule(
-                  user.id, quinoaVeggieBowl);
+              await userMealScheduleService.addMealToSchedule(
+                  user.id,
+                  UserMeals.part(
+                      meal: quinoaVeggieBowl,
+                      date: DateTime.now(),
+                      isScheduled: true,
+                      completed: false));
               break;
             default:
               stdout.writeln(
@@ -616,12 +626,22 @@ class CliDashboardPage {
         if (choose != null) {
           switch (choose) {
             case '1':
-              await scheduleService.addMealToSchedule(
-                  user.id, spaghettiBolognese);
+              await userMealScheduleService.addMealToSchedule(
+                  user.id,
+                  UserMeals.part(
+                      meal: spaghettiBolognese,
+                      date: DateTime.now(),
+                      isScheduled: true,
+                      completed: false));
               break;
             case '2':
-              await scheduleService.addMealToSchedule(
-                  user.id, teriyakiSalmonRice);
+              await userMealScheduleService.addMealToSchedule(
+                  user.id,
+                  UserMeals.part(
+                      meal: teriyakiSalmonRice,
+                      date: DateTime.now(),
+                      isScheduled: true,
+                      completed: false));
               break;
             default:
               stdout.writeln(
@@ -659,12 +679,22 @@ class CliDashboardPage {
         if (choose != null) {
           switch (choose) {
             case '1':
-              await scheduleService.addMealToSchedule(
-                  user.id, greekYogurtParfait);
+              await userMealScheduleService.addMealToSchedule(
+                  user.id,
+                  UserMeals.part(
+                      meal: greekYogurtParfait,
+                      date: DateTime.now(),
+                      isScheduled: true,
+                      completed: false));
               break;
             case '2':
-              await scheduleService.addMealToSchedule(
-                  user.id, hummusVeggieSticks);
+              await userMealScheduleService.addMealToSchedule(
+                  user.id,
+                  UserMeals.part(
+                      meal: hummusVeggieSticks,
+                      date: DateTime.now(),
+                      isScheduled: true,
+                      completed: false));
               break;
             default:
               stdout.writeln(
@@ -733,18 +763,22 @@ class CliDashboardPage {
       if (choose != null) {
         switch (choose) {
           case ("1"):
-            var meal = await scheduleService.addMealToSchedule(
+            var m = await mealScheduleService.addMealToSchedule(Meals(
+                mealType: MealType.breakfast,
+                calories: 100,
+                name: "Breads",
+                nutrients: {}));
+            var meal = await userMealScheduleService.addMealToSchedule(
                 user.id,
-                Meals(
-                    mealType: MealType.breakfast,
-                    timeTaken: DateTime.now(),
-                    calories: 100,
-                    name: "Breads",
-                    nutrients: {}));
+                UserMeals.part(
+                    meal: m,
+                    date: DateTime.now(),
+                    completed: false,
+                    isScheduled: true));
             var map = meal.toMap();
             stdout.writeln("Added meal: ${map['name']} - ${map['mealType']}");
           case ("2"):
-            var mealList = await scheduleService.getAll(user.id);
+            var mealList = await userMealScheduleService.getAll(user.id);
             if (mealList.isEmpty) {
               stdout.writeln("Meals not found at schedule!");
               break;
@@ -754,15 +788,15 @@ class CliDashboardPage {
               stdout.writeln("Meal: ${map['name']} - ${map['mealType']}");
             }
           case ("3"):
-            var dailyCalories =
-                await scheduleService.getCalories(user.id, 1, DateTime.now());
+            var dailyCalories = await userMealScheduleService.getCalories(
+                user.id, 1, DateTime.now());
             stdout.writeln("Daily calories: $dailyCalories");
           case ("4"):
-            var breakfastNutrients =
-                await scheduleService.getNutritions(user.id, 1, DateTime.now());
+            var breakfastNutrients = await userMealScheduleService
+                .getNutritions(user.id, 1, DateTime.now());
             stdout.writeln("Nutrients: $breakfastNutrients");
           case ("5"):
-            var meal = await scheduleService.remove(1);
+            var meal = await userMealScheduleService.remove(1);
             if (meal != null) {
               var map = meal.toMap();
               stdout.writeln("Removed meal: $map");
@@ -837,22 +871,17 @@ class CliDashboardPage {
       if (choose != null) {
         switch (choose) {
           case ("1"):
-            var workout = await workoutService.add(
-                user.id,
-                Workout(
-                    date: DateTime.now(),
-                    duration: Duration(minutes: Random().nextInt(30)),
-                    name: "Workout3000"));
+            var workout = await workoutService
+                .add(Workout(name: "Workout3000", exercises: []));
             var map = workout.toMap();
             stdout.writeln("Added workout: $map");
           case ("2"):
             var exercise = await workoutService.addToWorkout(
-                1,
+                "1",
                 Exercise(
                     name: "PowerLifting",
                     category: ExerciseCategory.strength,
                     equipment: EquipmentType.bodyweight,
-                    date: DateTime.now(),
                     calories: 100,
                     difficulty:
                         DifficultyTypeExtension.fromValue(Random().nextInt(4)),
@@ -866,7 +895,7 @@ class CliDashboardPage {
             var map = exercise.toMap();
             stdout.writeln("Added exercise: $map");
           case ("3"):
-            var exercises = await workoutService.getAllExercises(1);
+            var exercises = await workoutService.getAllExercises("1");
             if (exercises.isEmpty) {
               stdout.writeln("Exercises not found");
               break;
@@ -874,7 +903,7 @@ class CliDashboardPage {
             var map = exercises.map((exercise) => exercise.toMap());
             stdout.writeln("Exercises: $map");
           case ("4"):
-            var equipments = await workoutService.getAllUniqueEquipment(1);
+            var equipments = await workoutService.getAllUniqueEquipment("1");
             if (equipments.isEmpty) {
               stdout.writeln("Equipments not found");
               break;
@@ -882,7 +911,7 @@ class CliDashboardPage {
             var map = equipments.map((equipment) => equipment.customName);
             stdout.writeln("Equipments: $map");
           case ("5"):
-            var difficulty = await workoutService.getOverallDifficulty(1);
+            var difficulty = await workoutService.getOverallDifficulty("1");
             var map = difficulty.customName;
             stdout.writeln("Difficulty: $map");
           default:
@@ -966,6 +995,7 @@ class CliDashboardPage {
 3. 🏃‍ Activity status ($activityLength)
 4. 💪 Workout progress (${workoutNotifications.length})
 5. 🍔 Meal planner (${mealNotifications.length})
+6.  Achievements
 6. Exit
 ''');
       stdout.write("Your choose: ");

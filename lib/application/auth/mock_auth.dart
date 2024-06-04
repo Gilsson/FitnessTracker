@@ -33,7 +33,7 @@ class MockAuthentication {
     if (checkMail(user.mail)) {
       //   stdout.writeln("Mail accepted");
       _users.add(user);
-      user.id = counter;
+      user.id = counter.toString();
       counter++;
     } else {
       //stdout.writeln("Mail not accepted");

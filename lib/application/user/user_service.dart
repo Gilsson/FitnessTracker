@@ -10,7 +10,12 @@ class UserService {
     return unitOfWork.userRepository.getAllList();
   }
 
-  Future<UserDomain?> getById(int id) {
+  Future<List<UserDomain>> getByParam(
+      List<bool Function(UserDomain)> params) async {
+    return unitOfWork.userRepository.getAllListByParams(params);
+  }
+
+  Future<UserDomain?> getById(String id) {
     return unitOfWork.userRepository.getFirst([(user) => user.id == id]);
   }
 

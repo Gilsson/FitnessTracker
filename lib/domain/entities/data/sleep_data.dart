@@ -4,15 +4,38 @@ class SleepData extends TimedData {
   SleepStage sleepStage = SleepStage.none;
 
   SleepData(
-      {required super.date, required super.duration, required this.sleepStage});
-
+      {required super.date,
+      required super.duration,
+      required this.sleepStage}) {
+    if (sleepStage == SleepStage.planned) {
+      isScheduled = true;
+    }
+  }
+  SleepData.full(
+      {required DateTime date,
+      required Duration duration,
+      required this.sleepStage,
+      required String userId,
+      required String id,
+      bool? isScheduled})
+      : super.full(
+            userId: userId,
+            id: id,
+            date: date,
+            duration: duration,
+            isScheduled: isScheduled ?? false) {
+    if (isScheduled != null) {
+      if (isScheduled) sleepStage = SleepStage.planned;
+    }
+  }
   @override
   Map<String, dynamic> toMap() {
     return {
       "date": date,
       "duration": duration,
       "userId": userId,
-      "sleepStage": sleepStage.customName
+      "sleepStage": sleepStage.customName,
+      "isScheduled": isScheduled
     };
   }
 }

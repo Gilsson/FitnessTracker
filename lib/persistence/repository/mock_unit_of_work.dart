@@ -12,6 +12,7 @@ class MockUnitOfWork extends UnitOfWork {
     waterRepository = MockRepository();
     workoutRepository = MockRepository();
     notificationsRepository = MockRepository();
+    achievementRepository = MockRepository();
   }
 
   static UnitOfWork getInstance() {

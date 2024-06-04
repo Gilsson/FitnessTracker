@@ -1,5 +1,9 @@
 abstract class Entity {
-  int id = 0;
+  String id = "";
   Entity.withId(this.id);
   Entity();
+
+  Map<String, dynamic> toMap() {
+    return {"id": id};
+  }
 }

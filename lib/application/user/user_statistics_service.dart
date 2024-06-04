@@ -6,21 +6,21 @@ class UserStatisticsService {
 
   UserStatisticsService({required this.unitOfWork});
 
-  Future<Statistics?> getUserWeight(int userId) {
+  Future<Statistics?> getUserWeight(String userId) {
     return unitOfWork.statisticsRepository.getLast([
       (stat) => stat.type == StatisticsType.weight,
       (stat) => stat.userId == userId
     ]);
   }
 
-  Future<Statistics?> getUserHeight(int userId) {
+  Future<Statistics?> getUserHeight(String userId) {
     return unitOfWork.statisticsRepository.getLast([
       (stat) => stat.type == StatisticsType.height,
       (stat) => stat.userId == userId
     ]);
   }
 
-  Future<double?> getBMI(int userId) async {
+  Future<double?> getBMI(String userId) async {
     var weight = await getUserWeight(userId);
     var height = await getUserHeight(userId);
     if (height != null && weight != null) {
@@ -32,7 +32,7 @@ class UserStatisticsService {
     return null;
   }
 
-  Future<Statistics> addStatistics(int userId, Statistics statistics) {
+  Future<Statistics> addStatistics(String userId, Statistics statistics) {
     statistics.userId = userId;
     return unitOfWork.statisticsRepository.add(statistics);
   }
@@ -50,7 +50,7 @@ class UserStatisticsService {
     return stat;
   }
 
-  Future<List<Statistics>> getAllList(int userId) {
+  Future<List<Statistics>> getAllList(String userId) {
     return unitOfWork.statisticsRepository
         .getAllListByParams([(stat) => stat.userId == userId]);
   }

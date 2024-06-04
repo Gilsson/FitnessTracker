@@ -1,0 +1,251 @@
+@startuml
+set namespaceSeparator ::
+
+class "fitness_x::domain::entities::data::calories_target.dart::CaloriesTarget" {
+  +int calories
+  +DateTime date
+}
+
+"fitness_x::domain::entities::data::data.dart::Data" <|-- "fitness_x::domain::entities::data::calories_target.dart::CaloriesTarget"
+
+class "fitness_x::domain::entities::data::data.dart::Data" {
+  +String userId
+  +Map<String, dynamic> toMap()
+}
+
+"fitness_x::domain::entities::entity.dart::Entity" <|-- "fitness_x::domain::entities::data::data.dart::Data"
+
+class "fitness_x::domain::entities::data::exercise.dart::Exercise" {
+  +String name
+  +String description
+  +ExerciseCategory category
+  +EquipmentType equipment
+  +DifficultyType difficulty
+  +List<String> guide
+  +int sets
+  +int reps
+  +int calories
+  +Duration duration
+}
+
+"fitness_x::domain::entities::data::exercise.dart::Exercise" o-- "fitness_x::domain::entities::data::exercise.dart::ExerciseCategory"
+"fitness_x::domain::entities::data::exercise.dart::Exercise" o-- "fitness_x::domain::entities::data::exercise.dart::EquipmentType"
+"fitness_x::domain::entities::data::exercise.dart::Exercise" o-- "fitness_x::domain::entities::data::exercise.dart::DifficultyType"
+"fitness_x::domain::entities::entity.dart::Entity" <|-- "fitness_x::domain::entities::data::exercise.dart::Exercise"
+
+class "fitness_x::domain::entities::data::exercise.dart::UserExercise" {
+  +String exerciseId
+  +bool completed
+  +DateTime date
+}
+
+"fitness_x::domain::entities::data::data.dart::Data" <|-- "fitness_x::domain::entities::data::exercise.dart::UserExercise"
+
+class "fitness_x::domain::entities::data::exercise.dart::ExerciseCategory" {
+  +int index
+  {static} +List<ExerciseCategory> values
+  {static} +ExerciseCategory cardivascular
+  {static} +ExerciseCategory strength
+  {static} +ExerciseCategory flexibility
+  {static} +ExerciseCategory none
+}
+
+"fitness_x::domain::entities::data::exercise.dart::ExerciseCategory" o-- "fitness_x::domain::entities::data::exercise.dart::ExerciseCategory"
+
+class "fitness_x::domain::entities::data::exercise.dart::EquipmentType" {
+  +int index
+  {static} +List<EquipmentType> values
+  {static} +EquipmentType none
+  {static} +EquipmentType treadmill
+  {static} +EquipmentType barbell
+  {static} +EquipmentType elliptical
+  {static} +EquipmentType bike
+  {static} +EquipmentType pullupBar
+  {static} +EquipmentType dumbbell
+  {static} +EquipmentType kettlebell
+  {static} +EquipmentType bodyweight
+  {static} +EquipmentType custom
+}
+
+"fitness_x::domain::entities::data::exercise.dart::EquipmentType" o-- "fitness_x::domain::entities::data::exercise.dart::EquipmentType"
+
+class "fitness_x::domain::entities::data::exercise.dart::DifficultyType" {
+  +int index
+  {static} +List<DifficultyType> values
+  {static} +DifficultyType easy
+  {static} +DifficultyType medium
+  {static} +DifficultyType hard
+  {static} +DifficultyType none
+}
+
+"fitness_x::domain::entities::data::exercise.dart::DifficultyType" o-- "fitness_x::domain::entities::data::exercise.dart::DifficultyType"
+
+class "fitness_x::domain::entities::data::heart_rate.dart::HeartRateData" {
+  +int rate
+  +Map<String, dynamic> toMap()
+}
+
+"fitness_x::domain::entities::data::timed_data.dart::TimedData" <|-- "fitness_x::domain::entities::data::heart_rate.dart::HeartRateData"
+
+class "fitness_x::domain::entities::data::sleep_data.dart::SleepData" {
+  +SleepStage sleepStage
+  +Map<String, dynamic> toMap()
+}
+
+"fitness_x::domain::entities::data::sleep_data.dart::SleepData" o-- "fitness_x::domain::entities::data::sleep_data.dart::SleepStage"
+"fitness_x::domain::entities::data::timed_data.dart::TimedData" <|-- "fitness_x::domain::entities::data::sleep_data.dart::SleepData"
+
+class "fitness_x::domain::entities::data::sleep_data.dart::SleepStage" {
+  +int index
+  {static} +List<SleepStage> values
+  {static} +SleepStage awake
+  {static} +SleepStage light
+  {static} +SleepStage deep
+  {static} +SleepStage rem
+  {static} +SleepStage planned
+  {static} +SleepStage none
+}
+
+"fitness_x::domain::entities::data::sleep_data.dart::SleepStage" o-- "fitness_x::domain::entities::data::sleep_data.dart::SleepStage"
+
+class "fitness_x::domain::entities::data::statistics.dart::Statistics" {
+  +StatisticsType type
+  +double value
+  +DateTime? time
+}
+
+"fitness_x::domain::entities::data::statistics.dart::Statistics" o-- "fitness_x::domain::entities::data::statistics.dart::StatisticsType"
+"fitness_x::domain::entities::data::data.dart::Data" <|-- "fitness_x::domain::entities::data::statistics.dart::Statistics"
+
+class "fitness_x::domain::entities::data::statistics.dart::StatisticsType" {
+  +int index
+  {static} +List<StatisticsType> values
+  {static} +StatisticsType height
+  {static} +StatisticsType weight
+  {static} +StatisticsType age
+  {static} +StatisticsType sex
+  {static} +StatisticsType none
+}
+
+"fitness_x::domain::entities::data::statistics.dart::StatisticsType" o-- "fitness_x::domain::entities::data::statistics.dart::StatisticsType"
+
+class "fitness_x::domain::entities::data::step_data.dart::StepData" {
+  +int steps
+  +Map<String, dynamic> toMap()
+}
+
+"fitness_x::domain::entities::data::timed_data.dart::TimedData" <|-- "fitness_x::domain::entities::data::step_data.dart::StepData"
+
+class "fitness_x::domain::entities::data::timed_data.dart::TimedData" {
+  -DateTime _date
+  -Duration _duration
+  +bool isScheduled
+  +DateTime date
+  +Duration duration
+  +Map<String, dynamic> toMap()
+}
+
+"fitness_x::domain::entities::data::data.dart::Data" <|-- "fitness_x::domain::entities::data::timed_data.dart::TimedData"
+
+class "fitness_x::domain::entities::data::workout.dart::Workout" {
+  +List<Exercise> exercises
+  +String name
+  +String description
+  +DifficultyType difficulty
+  -Duration _duration
+  +Duration duration
+  +Exercise addExercise()
+  +int getCalories()
+  +Exercise removeExercise()
+}
+
+"fitness_x::domain::entities::data::workout.dart::Workout" o-- "fitness_x::domain::entities::data::exercise.dart::DifficultyType"
+"fitness_x::domain::entities::entity.dart::Entity" <|-- "fitness_x::domain::entities::data::workout.dart::Workout"
+
+class "fitness_x::domain::entities::data::workout.dart::UserWorkout" {
+  +String workoutId
+  +bool completed
+  +bool isScheduled
+  +DateTime date
+}
+
+"fitness_x::domain::entities::data::data.dart::Data" <|-- "fitness_x::domain::entities::data::workout.dart::UserWorkout"
+
+abstract class "fitness_x::domain::entities::entity.dart::Entity" {
+  +String id
+  +Map<String, dynamic> toMap()
+}
+
+class "fitness_x::domain::entities::meals::meals.dart::Meals" {
+  +String name
+  +Map<Nutrients, int> nutrients
+  +int calories
+  +String description
+  +Map<String, String> ingredients
+  +List<String> cookList
+  +MealType mealType
+  +String icon
+}
+
+"fitness_x::domain::entities::meals::meals.dart::Meals" o-- "fitness_x::domain::entities::meals::meals.dart::MealType"
+"fitness_x::domain::entities::entity.dart::Entity" <|-- "fitness_x::domain::entities::meals::meals.dart::Meals"
+
+class "fitness_x::domain::entities::meals::meals.dart::UserMeals" {
+  +Meals meal
+  +bool completed
+  +bool isScheduled
+  +DateTime date
+}
+
+"fitness_x::domain::entities::meals::meals.dart::UserMeals" o-- "fitness_x::domain::entities::meals::meals.dart::Meals"
+"fitness_x::domain::entities::data::data.dart::Data" <|-- "fitness_x::domain::entities::meals::meals.dart::UserMeals"
+
+class "fitness_x::domain::entities::meals::meals.dart::Nutrients" {
+  +int index
+  {static} +List<Nutrients> values
+  {static} +Nutrients carbohydrates
+  {static} +Nutrients proteins
+  {static} +Nutrients fats
+  {static} +Nutrients vitamins
+  {static} +Nutrients minerals
+  {static} +Nutrients fibre
+  {static} +Nutrients water
+}
+
+"fitness_x::domain::entities::meals::meals.dart::Nutrients" o-- "fitness_x::domain::entities::meals::meals.dart::Nutrients"
+
+class "fitness_x::domain::entities::meals::meals.dart::MealType" {
+  +int index
+  {static} +List<MealType> values
+  {static} +MealType breakfast
+  {static} +MealType lunch
+  {static} +MealType dinner
+  {static} +MealType snacks
+  {static} +MealType none
+}
+
+"fitness_x::domain::entities::meals::meals.dart::MealType" o-- "fitness_x::domain::entities::meals::meals.dart::MealType"
+
+class "fitness_x::domain::entities::user::user_domain.dart::UserDomain" {
+  +String name
+  +String mail
+  +String hashPassword
+  +List<Achievement> achievements
+  +List<StepData> stepData
+  +List<SleepData> sleepData
+  +List<HeartRateData> heartRateData
+  +List<TimedData> userData
+  +List<Statistics> statistics
+}
+
+"fitness_x::domain::entities::entity.dart::Entity" <|-- "fitness_x::domain::entities::user::user_domain.dart::UserDomain"
+
+class "fitness_x::domain::entities::water::water.dart::Water" {
+  +int amount
+  +DateTime dateTaken
+  +bool isScheduled
+}
+
+"fitness_x::domain::entities::data::data.dart::Data" <|-- "fitness_x::domain::entities::water::water.dart::Water"
+
+@enduml

@@ -30,6 +30,18 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  fitness_lib: ^1.0.3
+  flutter_local_notifications: ^17.1.2
+  simple_animation_progress_bar: ^1.6.0
+  dotted_dashed_line: ^0.0.3
+  simple_circular_progress_bar: ^1.0.2
+  animated_toggle_switch: ^0.6.2
+  carousel_slider: ^4.2.1
+  fl_chart: ^0.68.0
+  readmore: ^2.1.0
+  
+  calendar_agenda:
+    path: dev_lib/calendar_agenda/
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -37,6 +49,10 @@ dependencies:
   cupertino_icons: ^1.0.6
   firebase_auth: ^4.17.9
   firebase_core: ^2.27.1
+  cloud_firestore:  ^4.17.3
+  provider: ^6.1.2
+  shared_preferences: ^2.0.6
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

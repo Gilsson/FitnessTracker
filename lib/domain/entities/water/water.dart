@@ -1,18 +1,25 @@
-import 'package:fitness_sync/domain/entities/entity.dart';
+import 'package:fitness_sync/domain/entities/data/data.dart';
 
-class Water extends Entity {
-  late int userId;
+class Water extends Data {
   int amount;
 
   DateTime dateTaken;
+  bool isScheduled = false;
 
-  Water({required this.amount, required this.dateTaken});
-
-  Map<String, dynamic> toMap() {
-    return {
-      "userId": userId,
-      "amount": amount,
-      "dateTaken": dateTaken,
-    };
+  Water({required this.amount, required this.dateTaken, bool? isScheduled}) {
+    if (isScheduled != null) {
+      this.isScheduled = isScheduled;
+    }
+  }
+  Water.full(
+      {required this.amount,
+      required this.dateTaken,
+      required id,
+      required userId,
+      bool? isScheduled})
+      : super.withId(userId: userId, id: id) {
+    if (isScheduled != null) {
+      this.isScheduled = isScheduled;
+    }
   }
 }

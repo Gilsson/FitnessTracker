@@ -35,7 +35,7 @@ class MockRepository<T extends Entity> extends Repository<T> {
   @override
   Future<T> add(T entity) async {
     list.add(entity);
-    entity.id = counter;
+    entity.id = counter.toString();
     counter++;
     return entity;
   }

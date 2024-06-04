@@ -1,4 +1,6 @@
 import 'package:fitness_sync/domain/abstractions/repository.dart';
+import 'package:fitness_sync/domain/entities/data/calories_target.dart';
+import 'package:fitness_sync/domain/entities/data/exercise.dart';
 import 'package:fitness_sync/domain/entities/tasks/achievement.dart';
 import 'package:fitness_sync/domain/entities/data/heart_rate.dart';
 import 'package:fitness_sync/domain/entities/data/notification.dart';
@@ -18,11 +20,16 @@ abstract class UnitOfWork {
   late Repository<TimedData> dataRepository;
   late Repository<SleepData> sleepRepository;
   late Repository<Meals> mealRepository;
+  late Repository<UserMeals> userMealRepository;
+  late Repository<CaloriesTarget> caloriesTargetRepository;
   late Repository<Statistics> statisticsRepository;
   late Repository<StepData> stepDataRepository;
   late Repository<HeartRateData> heartRateRepository;
   late Repository<Water> waterRepository;
   late Repository<Workout> workoutRepository;
+  late Repository<UserWorkout> userWorkoutRepository;
+  late Repository<UserExercise> userExerciseRepository;
+  late Repository<Exercise> exerciseRepository;
   late Repository<Notification> notificationsRepository;
 
   void saveAllAsync();

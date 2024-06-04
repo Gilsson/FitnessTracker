@@ -4,20 +4,24 @@ class Notification extends Data {
   String description = "";
   bool isViewed = false;
   String name;
-  DateTime scheduledDate;
   late DateTime timeCreated;
 
-  Notification(this.name, this.scheduledDate) {
+  Notification(this.name) {
     timeCreated = DateTime.now();
   }
 
-  Map<String, dynamic> toMap() {
-    return {
-      "description": description,
-      "isViewed": isViewed,
-      "name": name,
-      "scheduledDate": scheduledDate,
-      "timeCreated": timeCreated
-    };
-  }
+  Notification.full(
+      {required this.description,
+      required this.isViewed,
+      required this.name,
+      required this.timeCreated});
+
+  Notification.withId(
+      {required this.description,
+      required this.isViewed,
+      required this.name,
+      required this.timeCreated,
+      required id,
+      required userId})
+      : super.withId(userId: userId, id: id);
 }
